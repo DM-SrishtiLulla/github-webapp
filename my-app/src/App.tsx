@@ -44,7 +44,17 @@ const IndexPage = () => {
 
 function App() {
 
-  const [repos, setRepos] = useState<repoFields[]>([]);
+
+  /*const getRepos = () => {
+    const reps = JSON.parse(localStorage.getItem("repos") || "[]");
+    if (reps) {
+      setRepos(reps);
+    }
+    return repos;
+  }*/
+
+  const [repos, setRepos] = useState<repoFields[]>(JSON.parse(localStorage.getItem("repos") || "[]"));
+
 
   const addRepo = (repo: repoFields) => {
     setRepos([...repos, repo])
@@ -77,18 +87,24 @@ function App() {
   
 
   useEffect(() => {
-    let isMounted = true;  
-    const repos = JSON.parse(localStorage.getItem("repos") || '{}');
-    if (isMounted && repos) {
-      setRepos(repos);
+    //let isMounted = true;  
+    //console.log(localStorage)
+    const reps = JSON.parse(localStorage.getItem("repos") || JSON.stringify(repos));
+    if (reps) {
+      setRepos(reps);
     }
     console.log(repos);
-    return () => { isMounted = false };
+    //return () => { isMounted = false };
   }, []);
 
   useEffect(() => {
+    console.log("here")
+    console.log(repos)
+    console.log(JSON.stringify(repos))
     localStorage.setItem("repos", JSON.stringify(repos));
-    console.log(repos);
+    //console.log(repos);
+   // console.log("saved")
+   // console.log(localStorage.getItem("repos"))
   }, [repos]);
 
  
