@@ -10,6 +10,7 @@ import repoFields from './repoFields';
 import RepoContextProvider from './contexts/RepoContext';
 import RepoList from './components/RepoList';
 import AddRepo from './components/AddRepo';
+import Header from './components/Header';
 
 type fetchProps = {
   username: string;
@@ -158,6 +159,7 @@ function App() {
  
   return (
     <ChakraProvider>
+      <Header />
       <AddRepo addRepo={addRepo} />
       <RepoList repos={repos} removeRepo={removeRepo} markRepoAsRead={markRepoAsRead}/>
       {/* <RepoContextProvider> */}

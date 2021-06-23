@@ -1,7 +1,7 @@
 import logo from './logo.svg';
 import './../App.css';
 import axios from 'axios';
-import { ChakraProvider, useAccordionDescendant } from "@chakra-ui/react"
+import { ChakraProvider, Grid, GridItem, useAccordionDescendant } from "@chakra-ui/react"
 import { Formik, Form, Field } from 'formik';
 import { FormErrorMessage, FormLabel, FormControl, Box, Flex, Heading, Input, Button, useColorMode, useColorModeValue } from "@chakra-ui/react"
 import { useForm } from 'react-hook-form';
@@ -111,26 +111,29 @@ const AddRepo = ({addRepo}) => {
     setUrl(makeUrl({username, reponame}))
     setUsername(username)
     setReponame(reponame)
-    console.log(username)
-    console.log(reponame)
-    //useFetch("")
-    //console.log(items)
-
-    //const {returnData, isLoading} = useFetch({username:uName, reponame:rName})
-    //setReturnData(returnData)
-    //setIsLoading(isLoading)
+    
   }
   return (
-      <form onSubmit={handleSubmit((data) => {
-            HandleSubmit({username: data.username, reponame:data.reponame});
-          })}>
-        <label htmlFor="username">Github Username:</label>
-        <input {...register("username")} onChange={(e) => setUsername(e.target.value)} value={username}></input>
-        <label htmlFor="reponame">Repository Name:</label>
-        <input {...register("reponame")} onChange={(e) => setReponame(e.target.value)} value={reponame}></input>
-        <input type="submit"></input>
-      </form>
-      
+    <Grid
+      templateColumns="repeat(10, 1fr)"
+      gap={1}
+      marginTop="1%"
+    >
+      <GridItem colSpan={3} marginLeft="5%">
+
+        <form onSubmit={handleSubmit((data) => {
+              HandleSubmit({username: data.username, reponame:data.reponame});
+            })}>
+          <label htmlFor="username">Github Username:</label>
+          <Input {...register("username")} onChange={(e) => setUsername(e.target.value)} value={username}></Input>
+          <label htmlFor="reponame">Repository Name:</label>
+          <Input {...register("reponame")} onChange={(e) => setReponame(e.target.value)} value={reponame}></Input>
+          <Button type="submit" marginTop="3%">Submit</Button>
+        </form>
+      </GridItem>
+      <GridItem colSpan={1} ></GridItem>
+
+    </Grid>
   );
   }
 

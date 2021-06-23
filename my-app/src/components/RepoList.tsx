@@ -1,6 +1,7 @@
 import React from 'react';
 import Repo from './Repo';
 import repoFields from '../repoFields';
+import { Flex } from '@chakra-ui/react';
 
 interface listType {
     repos: repoFields[],
@@ -11,7 +12,7 @@ const RepoList = ({ repos, removeRepo, markRepoAsRead }: listType) => {
     console.log("ok")
     console.log(repos)
   return (
-    <div className="items-container">
+    <Flex marginTop="3%">
       <ul>
         {(repos != undefined && repos.length > 0) ? 
 
@@ -29,7 +30,7 @@ const RepoList = ({ repos, removeRepo, markRepoAsRead }: listType) => {
             
     }
       </ul>
-    </div>
+    </Flex>
   );
 };
 
