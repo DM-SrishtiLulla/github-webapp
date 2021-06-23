@@ -5,9 +5,11 @@ import repoFields from '../repoFields';
 interface listType {
     repos: repoFields[],
     removeRepo: any,
-    updateRepo: any,
+    markRepoAsRead: any,
 }
-const RepoList = ({ repos, removeRepo, updateRepo }: listType) => {
+const RepoList = ({ repos, removeRepo, markRepoAsRead }: listType) => {
+    console.log("ok")
+    console.log(repos)
   return (
     <div className="items-container">
       <ul>
@@ -19,7 +21,7 @@ const RepoList = ({ repos, removeRepo, updateRepo }: listType) => {
           <li>
             
             
-            <Repo key={repo.id} repo={repo} removeRepo={removeRepo} updateRepo={updateRepo}/>
+            <Repo key={repo.id} repo={repo} removeRepo={removeRepo} markRepoAsRead={markRepoAsRead}/>
           </li>) :
           <li></li>
         ))) :

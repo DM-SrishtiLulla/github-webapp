@@ -13,11 +13,11 @@ import AddRepo from './components/AddRepo';
 
 type fetchProps = {
   username: string;
-  repoName: string;
+  reponame: string;
 }
 
 type repoData = {
-  repoName: string;
+  reponame: string;
   username: string;
   updatedAt: string;
   seen: boolean;
@@ -53,11 +53,39 @@ function App() {
     return repos;
   }*/
 
-  const [repos, setRepos] = useState<repoFields[]>(JSON.parse(localStorage.getItem("repos") || "[]"));
+  const initialRepos = () => {
+    return JSON.parse(localStorage.getItem("repos") || "[]")
+  }
+
+  const [repos, setRepos] = useState<repoFields[]>(initialRepos);
 
 
-  const addRepo = (repo: repoFields) => {
-    setRepos([...repos, repo])
+  const addRepo = async(repo: repoFields) => {
+    console.log("here")
+    console.log(repo)
+    console.log(repos)
+
+    //const includesRepo = repos.some(r => r.id = repo.id) 
+    var includesRepo = false;
+    var currRepo : repoFields
+    for (var r in repos) {
+      console.log("list")
+      console.log(repos[r].reponame)
+      if (repos[r].reponame = repo.reponame) {
+        console.log("i got here")
+        includesRepo = true;
+        break;
+      }
+    }
+    if (!includesRepo) {
+      setRepos([...repos, repo])
+      console.log(repos)
+    }
+
+    /*console.log(includesRepo)
+    if (!includesRepo) {
+      setRepos([...repos, repo])
+    }*/
     console.log(repos)
   }
 
@@ -65,22 +93,16 @@ function App() {
     setRepos(repos.filter((repo) => repoToRemove !== repo))
   }
 
-  const updateRepo = (repoToUpdate: repoFields) => {
-    if (repoToUpdate.unread == true) {
-      var temp = repoToUpdate;
+  const markRepoAsRead = (readRepo: repoFields) => {
+    if (readRepo.unread == true) {
+      var temp = readRepo;
       temp.unread = false;
-      //removeRepo(repoToUpdate)
-
       var repoIndex = repos.findIndex(function(c) { 
-        return c.id == repoToUpdate.id; 
+        return c.id == readRepo.id; 
     });
       const newRepos = [...repos];
       newRepos[repoIndex] = temp;
       setRepos(newRepos)
-      //setRepos(repos.filter((repo) => repoToUpdate !== repo))
-      //console.log(repos)
-      //addRepo(temp)
-      //setRepos([...repos, temp])
     }
     
   }
@@ -88,30 +110,24 @@ function App() {
 
   useEffect(() => {
     //let isMounted = true;  
-    //console.log(localStorage)
     const reps = JSON.parse(localStorage.getItem("repos") || JSON.stringify(repos));
     if (reps) {
+      console.log("re-render")
+      console.log(reps)
       setRepos(reps);
     }
-    console.log(repos);
     //return () => { isMounted = false };
   }, []);
 
   useEffect(() => {
-    console.log("here")
-    console.log(repos)
-    console.log(JSON.stringify(repos))
     localStorage.setItem("repos", JSON.stringify(repos));
-    //console.log(repos);
-   // console.log("saved")
-   // console.log(localStorage.getItem("repos"))
   }, [repos]);
 
  
   return (
     <ChakraProvider>
-      <RepoList repos={repos} removeRepo={removeRepo} updateRepo={updateRepo}/>
       <AddRepo addRepo={addRepo} />
+      <RepoList repos={repos} removeRepo={removeRepo} markRepoAsRead={markRepoAsRead}/>
       {/* <RepoContextProvider> */}
       {/* </RepoContextProvider> */}
     </ChakraProvider>

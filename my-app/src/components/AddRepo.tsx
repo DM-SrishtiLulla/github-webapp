@@ -1,7 +1,7 @@
 import logo from './logo.svg';
 import './../App.css';
 import axios from 'axios';
-import { ChakraProvider } from "@chakra-ui/react"
+import { ChakraProvider, useAccordionDescendant } from "@chakra-ui/react"
 import { Formik, Form, Field } from 'formik';
 import { FormErrorMessage, FormLabel, FormControl, Box, Flex, Heading, Input, Button, useColorMode, useColorModeValue } from "@chakra-ui/react"
 import { useForm } from 'react-hook-form';
@@ -11,11 +11,11 @@ import repoFields from '../repoFields';
 
 type fetchProps = {
   username: string;
-  repoName: string;
+  reponame: string;
 }
 
 type repoData = {
-  repoName: string;
+  reponame: string;
   username: string;
   updatedAt: string;
   seen: boolean;
@@ -25,7 +25,7 @@ type repoData = {
 
 
 
-const makeUrl = ({username, repoName}: fetchProps) => `https://api.github.com/repos/${username}/${repoName}/releases`;
+const makeUrl = ({username, reponame}: fetchProps) => `https://api.github.com/repos/${username}/${reponame}/releases`;
 
 type FormValues = {
   username: string,
@@ -35,7 +35,10 @@ type FormValues = {
 const AddRepo = ({addRepo}) => {
 
   const [username, setUsername] = useState("")
-  const [reponame, setRepoName] = useState("")
+  const [reponame, setReponame] = useState("")
+
+  const [currentUser, setCurrentUser] = useState("");
+  const [currentRepo, setCurrentRepo] = useState("");
 
 
   //const { dispatch } = useContext(RepoContext);
@@ -50,33 +53,42 @@ const AddRepo = ({addRepo}) => {
     const [error, setError] = useState();
 
     const [repo, setRepo] = useState<repoFields>();
+
   
     //const [returnData, setReturnData] = useState<repoData>()
     
     useEffect(() => {
       const fetchItems = async () => {
         try {
-          const result = await axios(url)
+          console.log(url)
+          const result = await axios(url, {
+            headers: {
+              'Authorization': 'token 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',
+            }
+          })
           var data = result.data[0]
           console.log(data)
-          //console.log(data.tag_name)
+          console.log("old user")
+          console.log(username)
+          console.log(reponame)
+          console.log("current?")
+          console.log(currentUser)
+          console.log(currentRepo)
           setItems(data)
-          //setUpdatedAt(data.updated_at)
-          //setDescription(data.description)
-          //setReturnData({username:username, repoName:repoName, updatedAt: data.updated_at, seen: false, description: data.description})
           setIsLoading(false)
           const version : string = data.tag_name
           console.log(version)
-          //console.log(updatedAt)
-          const r : repoFields = {repoName: reponame, owner: username, version: version, releaseDate: data.published_at, unread: true, id: data.node_id}
+          const r : repoFields = {reponame: reponame, owner: username, version: version, releaseDate: data.published_at, unread: true, id: data.node_id, description: data.body}
           setRepo(r)
-          console.log("hello")
-          console.log(repo)
-          console.log("a" + repo?.version)
-          addRepo(r)
-          setRepo({repoName: "", owner: "", version: "", releaseDate: "", unread: false, id: ""});
+          //const includesRepo = repos.
+          if (reponame != "") {
+            console.log(r.owner)
+            console.log(r.reponame)
+            await addRepo(r)
+          }
+          setRepo({reponame: "", owner: "", version: "", releaseDate: "", unread: false, id: "", description: ""});
           setUsername("")
-          setRepoName("")
+          setReponame("")
           //localStorage.setItem(url, data.description)
           //dispatch()
         }
@@ -92,7 +104,7 @@ const AddRepo = ({addRepo}) => {
   }
 
   const { items, error, isLoading, setUrl, description, updatedAt } = 
-  useFetch(makeUrl({username: "", repoName: ""}));
+  useFetch(makeUrl({username: "", reponame: ""}));
 
   const { register, handleSubmit } = useForm<FormValues>();
 
@@ -101,24 +113,26 @@ const AddRepo = ({addRepo}) => {
   const [rData, setReturnData] = useState<repoData>()
   const [loading, setIsLoading] = useState(true)
 
-  const HandleSubmit = ({username, repoName}: fetchProps) => {
-    setUrl(makeUrl({username, repoName}))
+  const HandleSubmit = ({username, reponame}: fetchProps) => {
+    setUrl(makeUrl({username, reponame}))
     setUsername(username)
-    setRepoName(repoName)
+    setReponame(reponame)
+    console.log(username)
+    console.log(reponame)
     //console.log(items)
 
-    //const {returnData, isLoading} = useFetch({username:uName, repoName:rName})
+    //const {returnData, isLoading} = useFetch({username:uName, reponame:rName})
     //setReturnData(returnData)
     //setIsLoading(isLoading)
   }
   return (
       <form onSubmit={handleSubmit((data) => {
-            HandleSubmit({username: data.username, repoName:data.reponame});
+            HandleSubmit({username: data.username, reponame:data.reponame});
           })}>
         <label htmlFor="username">Github Username:</label>
         <input {...register("username")} onChange={(e) => setUsername(e.target.value)} value={username}></input>
         <label htmlFor="reponame">Repository Name:</label>
-        <input {...register("reponame")} onChange={(e) => setRepoName(e.target.value)} value={reponame}></input>
+        <input {...register("reponame")} onChange={(e) => setReponame(e.target.value)} value={reponame}></input>
         <input type="submit"></input>
       </form>
       

@@ -1,10 +1,11 @@
 interface repoFields {
-    repoName : string, 
+    reponame : string, 
     owner: string,
     version: string,
     releaseDate: string,
     unread: boolean,
-    id: string
+    id: string,
+    description: string,
 } 
 
 export default repoFields;
