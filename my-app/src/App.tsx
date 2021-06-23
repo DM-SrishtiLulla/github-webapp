@@ -60,24 +60,55 @@ function App() {
   const [repos, setRepos] = useState<repoFields[]>(initialRepos);
   const [reponames, setReponames] = useState<string[]>([])
 
+  const makeUrl = ({username, reponame}: fetchProps) => `https://api.github.com/repos/${username}/${reponame}/releases`;
+
   useEffect(() => {
-    //let isMounted = true;  
-    const reps : repoFields[] = JSON.parse(localStorage.getItem("repos") || JSON.stringify(repos));
-    if (reps) {
-      console.log("re-render")
-      console.log(reps)
-      setRepos(reps);
-      var rnames : string[] = []
-      for (var i = 0; i < reps.length; i++) {
-        rnames.push(reps[i].reponame)
-      }
-      setReponames(rnames)
+      const fetchItems = async () => {
+
+        //let isMounted = true;  
+          const reps : repoFields[] = JSON.parse(localStorage.getItem("repos") || JSON.stringify(repos));
+          if (reps) {
+            console.log("re-render")
+            console.log(reps)
+            var rnames : string[] = []
+            var oldRepo : repoFields
+            var oldDate : string
+            var newRepoData
+            var newDate : string
+            for (var i = 0; i < reps.length; i++) {
+              oldRepo = reps[i]
+              oldDate = oldRepo.releaseDate
+              const result = await axios(makeUrl({username: oldRepo.owner, reponame: oldRepo.reponame}), {
+                headers: {
+                  'Authorization': 'token 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',
+                }
+              })
+              newRepoData = result.data[0]
+              newDate = newRepoData.published_at
+              if (newDate != oldDate) {
+                oldRepo.id = newRepoData.node_id
+                oldRepo.description = newRepoData.body
+                oldRepo.releaseDate = newDate
+                oldRepo.unread = true
+                oldRepo.version = newRepoData.tag_name
+                reps[i] = oldRepo
+              }
+              
+              rnames.push(reps[i].reponame)
+            }
+            setReponames(rnames)
+            setRepos(reps);
+          }
+      
     }
-    //return () => { isMounted = false };
+    fetchItems()
+  
   }, []);
+  
 
   useEffect(() => {
     localStorage.setItem("repos", JSON.stringify(repos));
+    console.log("i came here")
   }, [repos]);
 
 
@@ -104,6 +135,7 @@ function App() {
   }
 
   const removeRepo = (repoToRemove: repoFields) => {
+    setReponames(reponames.filter((rname) => repoToRemove.reponame !== rname))
     setRepos(repos.filter((repo) => repoToRemove !== repo))
   }
 
