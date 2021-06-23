@@ -67,19 +67,13 @@ const AddRepo = ({addRepo}) => {
             }
           })
           var data = result.data[0]
-          console.log(data)
-          console.log("old user")
-          console.log(username)
-          console.log(reponame)
-          console.log("current?")
-          console.log(currentUser)
-          console.log(currentRepo)
+          
           setItems(data)
           setIsLoading(false)
           const version : string = data.tag_name
           console.log(version)
           const r : repoFields = {reponame: reponame, owner: username, version: version, releaseDate: data.published_at, unread: true, id: data.node_id, description: data.body}
-          setRepo(r)
+          //setRepo(r)
           //const includesRepo = repos.
           if (reponame != "") {
             console.log(r.owner)
@@ -119,6 +113,7 @@ const AddRepo = ({addRepo}) => {
     setReponame(reponame)
     console.log(username)
     console.log(reponame)
+    //useFetch("")
     //console.log(items)
 
     //const {returnData, isLoading} = useFetch({username:uName, reponame:rName})

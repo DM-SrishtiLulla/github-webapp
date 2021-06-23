@@ -58,29 +58,43 @@ function App() {
   }
 
   const [repos, setRepos] = useState<repoFields[]>(initialRepos);
+  const [reponames, setReponames] = useState<string[]>([])
+
+  useEffect(() => {
+    //let isMounted = true;  
+    const reps : repoFields[] = JSON.parse(localStorage.getItem("repos") || JSON.stringify(repos));
+    if (reps) {
+      console.log("re-render")
+      console.log(reps)
+      setRepos(reps);
+      var rnames : string[] = []
+      for (var i = 0; i < reps.length; i++) {
+        rnames.push(reps[i].reponame)
+      }
+      setReponames(rnames)
+    }
+    //return () => { isMounted = false };
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("repos", JSON.stringify(repos));
+  }, [repos]);
+
 
 
   const addRepo = async(repo: repoFields) => {
-    console.log("here")
-    console.log(repo)
-    console.log(repos)
 
-    //const includesRepo = repos.some(r => r.id = repo.id) 
-    var includesRepo = false;
-    var currRepo : repoFields
-    for (var r in repos) {
-      console.log("list")
-      console.log(repos[r].reponame)
-      if (repos[r].reponame = repo.reponame) {
-        console.log("i got here")
-        includesRepo = true;
-        break;
+      console.log(reponames)
+      if (!reponames.includes(repo.reponame)) {
+        setRepos([...repos, repo])
+        setReponames([...reponames, repo.reponame])
+        console.log("it's not already there")
+      } else {
+        console.log("ITS ALR HERE")
       }
-    }
-    if (!includesRepo) {
-      setRepos([...repos, repo])
+   
       console.log(repos)
-    }
+    
 
     /*console.log(includesRepo)
     if (!includesRepo) {
@@ -108,21 +122,7 @@ function App() {
   }
   
 
-  useEffect(() => {
-    //let isMounted = true;  
-    const reps = JSON.parse(localStorage.getItem("repos") || JSON.stringify(repos));
-    if (reps) {
-      console.log("re-render")
-      console.log(reps)
-      setRepos(reps);
-    }
-    //return () => { isMounted = false };
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem("repos", JSON.stringify(repos));
-  }, [repos]);
-
+ 
  
   return (
     <ChakraProvider>
