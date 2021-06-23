@@ -1,7 +1,6 @@
-import React from 'react';
 import Repo from './Repo';
 import repoFields from '../repoFields';
-import { Flex } from '@chakra-ui/react';
+import { Flex, VisuallyHidden } from '@chakra-ui/react';
 
 interface listType {
     repos: repoFields[],
@@ -20,13 +19,11 @@ const RepoList = ({ repos, removeRepo, markRepoAsRead }: listType) => {
             repos && repo.id ? 
             (
           <li>
-            
-            
             <Repo key={repo.id} repo={repo} removeRepo={removeRepo} markRepoAsRead={markRepoAsRead}/>
           </li>) :
-          <li></li>
+          <VisuallyHidden></VisuallyHidden>
         ))) :
-        (<li></li>) 
+        (<VisuallyHidden></VisuallyHidden>) 
             
     }
       </ul>

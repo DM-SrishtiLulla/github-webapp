@@ -1,5 +1,5 @@
-import { Box, Flex, Heading, Text, Link, Stack, Button, Grid, GridItem, VisuallyHidden } from '@chakra-ui/react';
-import React, { useState } from 'react';
+import { Box, Heading, Text, Stack, Button, Grid, GridItem, VisuallyHidden } from '@chakra-ui/react';
+import { useState } from 'react';
 import repoFields from '../repoFields';
 
 interface repoType {
@@ -11,10 +11,10 @@ const Repo = ({ repo, removeRepo, markRepoAsRead }: repoType ) => {
 
     const [showDetails, setShowDetails] = useState(true)
     const unread = repo.unread;
-    const date = Date.parse(repo.releaseDate)
     const toggleDetails = (repo: repoFields) => {
         setShowDetails(!showDetails)
     }
+
   return (
     <Grid
       templateColumns="repeat(10, 1fr)"
@@ -105,7 +105,6 @@ const Repo = ({ repo, removeRepo, markRepoAsRead }: repoType ) => {
                 (<Box
                     maxW={'1000px'}
                     w={'full'}
-                    //bg={useColorModeValue('white', 'gray.900')}
                     boxShadow={'2xl'}
                     rounded={'lg'}
                     p={6}
@@ -116,19 +115,7 @@ const Repo = ({ repo, removeRepo, markRepoAsRead }: repoType ) => {
                   </Text>
                     </Box>) : (<VisuallyHidden></VisuallyHidden>)
             }
-            
         </GridItem>
-        
-    {/* <Flex bgColor={unread? "teal.500" : "red.400"}>
-        <p>{repo.version}</p>
-      <p>{repo.reponame}</p>
-      <p>{repo.owner}</p>
-      <p>{repo.releaseDate}</p>
-      <p>{repo.description}</p>
-      <button onClick={() => removeRepo(repo)}>X</button>
-      <button onClick={() => markRepoAsRead(repo)}>READ</button>
-    </Flex> */}
-      
     </Grid>  
     );
 };

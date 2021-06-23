@@ -1,5 +1,4 @@
-import React from "react";
-import { Flex, Grid, GridItem, Heading, Link, Text } from "@chakra-ui/react";
+import { Flex, Grid, GridItem, Heading, Text } from "@chakra-ui/react";
 
 const Header = () => (
   <Flex justify="space-between" borderBottom="1px" borderColor="gray.200" p={3}>
@@ -18,10 +17,7 @@ const Header = () => (
             <Text>A green border indicates an updated/unread release - refresh page to ensure releases for all repositories are updated. Click "Mark as Read" to indicate this release was read.</Text>
             <Text>Click "Toggle Details" to show/hide release notes.</Text>
         </GridItem>
-       
       </Grid>
-    
-
   </Flex>
 );
 

@@ -1,29 +1,15 @@
-import logo from './logo.svg';
 import './../App.css';
 import axios from 'axios';
-import { ChakraProvider, Grid, GridItem, useAccordionDescendant } from "@chakra-ui/react"
-import { Formik, Form, Field } from 'formik';
-import { FormErrorMessage, FormLabel, FormControl, Box, Flex, Heading, Input, Button, useColorMode, useColorModeValue } from "@chakra-ui/react"
+import { Grid, GridItem } from "@chakra-ui/react"
+import { Input, Button } from "@chakra-ui/react"
 import { useForm } from 'react-hook-form';
-import React, { useContext, useState, useEffect } from 'react';
-import { RepoContext } from '../contexts/RepoContext';
+import { useState, useEffect } from 'react';
 import repoFields from '../repoFields';
 
 type fetchProps = {
   username: string;
   reponame: string;
 }
-
-type repoData = {
-  reponame: string;
-  username: string;
-  updatedAt: string;
-  seen: boolean;
-  description: string;
-}
-
-
-
 
 const makeUrl = ({username, reponame}: fetchProps) => `https://api.github.com/repos/${username}/${reponame}/releases`;
 
@@ -37,25 +23,10 @@ const AddRepo = ({addRepo}) => {
   const [username, setUsername] = useState("")
   const [reponame, setReponame] = useState("")
 
-  const [currentUser, setCurrentUser] = useState("");
-  const [currentRepo, setCurrentRepo] = useState("");
-
-
-  //const { dispatch } = useContext(RepoContext);
-
   const useFetch = (init_url: string) => {
     const [url, setUrl] = useState("");
-    
-    const [items, setItems] = useState("") 
-    const [updatedAt, setUpdatedAt] = useState("") 
-    const [description, setDescription] = useState("")
-    const [isLoading, setIsLoading] = useState(true)
     const [error, setError] = useState();
-
     const [repo, setRepo] = useState<repoFields>();
-
-  
-    //const [returnData, setReturnData] = useState<repoData>()
     
     useEffect(() => {
       const fetchItems = async () => {
@@ -68,23 +39,17 @@ const AddRepo = ({addRepo}) => {
           })
           var data = result.data[0]
           
-          setItems(data)
-          setIsLoading(false)
+
           const version : string = data.tag_name
           console.log(version)
           const r : repoFields = {reponame: reponame, owner: username, version: version, releaseDate: data.published_at, unread: true, id: data.node_id, description: data.body}
-          //setRepo(r)
-          //const includesRepo = repos.
+
           if (reponame != "") {
-            console.log(r.owner)
-            console.log(r.reponame)
             await addRepo(r)
           }
           setRepo({reponame: "", owner: "", version: "", releaseDate: "", unread: false, id: "", description: ""});
           setUsername("")
           setReponame("")
-          //localStorage.setItem(url, data.description)
-          //dispatch()
         }
         catch (e) {
           setError(e)
@@ -94,18 +59,12 @@ const AddRepo = ({addRepo}) => {
       fetchItems()
     
     }, [url]);
-    return { items, error, isLoading, setUrl, description, updatedAt };
+    return { setUrl, error };
   }
 
-  const { items, error, isLoading, setUrl, description, updatedAt } = 
-  useFetch(makeUrl({username: "", reponame: ""}));
+  const { setUrl, error } = useFetch(makeUrl({username: "", reponame: ""}));
 
   const { register, handleSubmit } = useForm<FormValues>();
-
-  //const [url, setUrl] = useState("")
-  const [uName, setUname] = useState("")
-  const [rData, setReturnData] = useState<repoData>()
-  const [loading, setIsLoading] = useState(true)
 
   const HandleSubmit = ({username, reponame}: fetchProps) => {
     setUrl(makeUrl({username, reponame}))
@@ -135,7 +94,7 @@ const AddRepo = ({addRepo}) => {
 
     </Grid>
   );
-  }
+}
 
 
 export default AddRepo;
