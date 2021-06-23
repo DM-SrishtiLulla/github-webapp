@@ -44,11 +44,7 @@ function App() {
             for (var i = 0; i < reps.length; i++) {
               oldRepo = reps[i]
               oldDate = oldRepo.releaseDate
-              const result = await axios(makeUrl({username: oldRepo.owner, reponame: oldRepo.reponame}), {
-                headers: {
-                  'Authorization': 'token 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',
-                }
-              })
+              const result = await axios(makeUrl({username: oldRepo.owner, reponame: oldRepo.reponame}))
               newRepoData = result.data[0]
               newDate = newRepoData.published_at
               if (newDate != oldDate) {

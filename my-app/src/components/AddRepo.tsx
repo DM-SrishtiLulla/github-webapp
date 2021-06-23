@@ -32,14 +32,8 @@ const AddRepo = ({addRepo}) => {
       const fetchItems = async () => {
         try {
           console.log(url)
-          const result = await axios(url, {
-            headers: {
-              'Authorization': 'token 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',
-            }
-          })
+          const result = await axios(url)
           var data = result.data[0]
-          
-
           const version : string = data.tag_name
           console.log(version)
           const r : repoFields = {reponame: reponame, owner: username, version: version, releaseDate: data.published_at, unread: true, id: data.node_id, description: data.body}
